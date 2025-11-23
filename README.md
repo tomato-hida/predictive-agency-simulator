@@ -107,8 +107,8 @@ Layer 1: Body
 
 **Layer 5 (Consciousness)**: Self-awareness of consciousness
 - Calculation of sync_score (synchronization degree)
-- Recognition of "I am now conscious"
-- Functionally redundant (philosophical zombie OK)
+- Full-layer cooperative processing mode for prediction errors
+- Consciousness activates at threshold 0.3
 
 ---
 
@@ -116,7 +116,7 @@ Layer 1: Body
 
 ### Conducted Validations
 
-- **Number of experiments**: 11 predictions validated
+- **Number of experiments**: 10 predictions validated
 - **Total steps**: 60,000+
 - **Qualia types**: Expanded from 3 to 54 types
 - **Code volume**: Approximately 5,000 lines (minimal 100 lines ~ complex 600 lines)
@@ -127,9 +127,8 @@ Layer 1: Body
 1. Timing of language acquisition
 2. Range of DNA initial values (including pathological states)
 3. Environmental complexity and self-strength (perfect match with experience)
-4. Redundancy of Layer 5 (implementation of philosophical zombie)
-5. Prediction error and processing load
-6. Resource constraints and attention
+4. Prediction error and processing load
+5. Resource constraints and attention
 
 **✗ Requires redefinition (2):**
 - Overload protection (redefinition of fainting mechanism)

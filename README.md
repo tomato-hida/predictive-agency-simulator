@@ -123,7 +123,7 @@ Layer 1: Body
 
 ### Validation Results
 
-**✓ Confirmed (6):**
+**✓ Confirmed (5):**
 1. Timing of language acquisition
 2. Range of DNA initial values (including pathological states)
 3. Environmental complexity and self-strength (perfect match with experience)

@@ -1,3 +1,5 @@
+Markdown
+
 # Predictive Agency Simulator
 ### (旧題: 人の内なる運動理論 / Theory of Human Inner Movement)
 
@@ -44,3 +46,42 @@ graph TD
     L3 -->|Sensory Prediction| L2
     L2[Layer 2: Qualia Processing] -->|Raw Data| L3
     L1[Layer 1: Body / Sensor Inputs] -->|Stimulus| L2
+Layer 3 (Structuring): 予測誤差（Prediction Error）を計算。
+
+Layer 4 (Self-Model): 誤差のフィードバックを受け、内部モデル（世界モデル）を更新。
+
+Layer 5 (Meta-Cognition): 予測誤差と自己一貫性の同期レベル（Sync Score）を監視し、特定の条件下でのみ「意識モード」を発動させる。
+
+🚀 クイックスタート (Quick Start)
+最小構成（Minimal Implementation）
+予測符号化による自己形成のコアロジックは、わずか100行で実装されています。
+
+Python
+
+from code.phase1_minimal import MinimalConsciousness
+
+# エージェントの初期化
+system = MinimalConsciousness()
+
+# 100ステップのシミュレーション
+for step in range(100):
+    result = system.process_step()
+    
+    if result['is_conscious']:
+        print(f"Step {step}: Agency Activated! (Sync: {result['sync_score']:.3f})")
+完全版シミュレーション（Phase 5）
+意識の間欠性を確認する実験コードです。
+
+Python
+
+from code.phase5_consciousness import ConsciousnessSystem
+
+system = ConsciousnessSystem()
+# 集中環境（Focused）での実験
+results = system.run_experiment(steps=10000, environment='focused')
+🤝 背景 (Background: Implementation-First Approach)
+本プロジェクトは、専門的なAI研究機関によるものではなく、**「動かせば分かる（Implementation-First）」**という哲学を持つトマト農家と、複数のLLM（Claude, Gemini, GPT）との対話的協働によって開発されました。
+
+理論先行ではなく、「予測誤差に対してシステムはどう振る舞うべきか？」という実装上の要請を積み重ねた結果、生成されたコードが現代の脳科学理論（自由エネルギー原理など）と高い整合性を示したことは、本プロジェクトの特筆すべき成果です。
+
+より詳細な経緯や理論的背景については、ドキュメントフォルダを参照してください

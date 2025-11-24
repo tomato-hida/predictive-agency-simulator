@@ -101,6 +101,8 @@ At first glance, this system might look like a simple rule-based character (a "T
 ### 3. Error as Energy
 * **Error as Failure:** Usually, errors are bad states to be avoided.
 * **Error as Trigger:** This system uses prediction error (surprise) as a **trigger/fuel to activate consciousness**. It naturally reproduces biological resource management: saving energy with automatic processing (Zombie Mode) during calm times, and allocating full computational resources (Consciousness Awakening) only when facing unexpected events.
+
+* 
 📄 License
 MIT License
 

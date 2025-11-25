@@ -15,6 +15,7 @@
 ### 実験1：痛いと気持ちいいが同時に出る
 
 ```bash
+cd code
 python phase3_dna_and_learning.py --dna_pain=100
 ```
 
@@ -27,6 +28,7 @@ DNA初期値を極端に上げると、痛みと快感が混合する。
 ### 実験2：意識が70%で頭打ち
 
 ```bash
+cd code
 python phase5_consciousness.py --environment=focused --steps=10000
 ```
 
@@ -39,6 +41,7 @@ python phase5_consciousness.py --environment=focused --steps=10000
 ### 実験3：マルチタスクで自分を見失う
 
 ```bash
+cd code
 python phase5_consciousness.py --compare
 ```
 
@@ -130,6 +133,8 @@ cd 5-layer-consciousness
 ### 実行
 
 ```bash
+cd code
+
 # Phase 1: 最小実装（100行）
 python phase1_minimal.py
 

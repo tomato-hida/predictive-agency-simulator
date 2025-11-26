@@ -251,7 +251,7 @@ MIT License
   title = {5-Layer Consciousness Model: 
            Implementation-First Approach to Consciousness},
   year = {2025},
-  url = {https://github.com/...}
+  url = {https://github.com/tomato-hida/predictive-agency-simulator}
 }
 ```
 

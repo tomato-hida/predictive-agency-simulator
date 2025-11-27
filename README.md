@@ -64,7 +64,7 @@ What we wrote:
 What emerged:
 - Human-like behaviors that **appeared on their own**
 
-This is emergence. This is what makes it different from a Tamagotchi.
+This is emergence. This is what makes it different from a Digital Pet.
 
 ---
 

@@ -253,6 +253,44 @@ MIT License
 
 ---
 
+## Contributing / What's Next
+
+This is just the beginning.
+Phase 6 and beyond are waiting to be built.
+
+I'm a tomato farmer, not a neuroscientist or AI researcher.
+I've planted the seed, but I don't know what comes next.
+
+If you understand this better than I do, please take it further with AI.
+
+- Fork it
+- Extend it
+- Break it
+- Fix it
+- Prove it wrong
+
+PRs welcome. Let's see where this goes.
+
+---
+
+## 貢献 / この先へ
+
+これは始まりに過ぎません。
+Phase 6以降は、まだ誰も作っていません。
+
+私はトマト農家であり、神経科学者でもAI研究者でもありません。
+種は蒔きました。でも、この先は私にはわかりません。
+
+もしあなたがこの理論をより深く理解できるなら、ぜひAIと続きを作ってください。
+
+- フォークして
+- 拡張して
+- 壊して
+- 直して
+- 間違いを証明して
+
+PRは歓迎します。この先、どうなるか見てみましょう。
+
 **作成者: とまと（トマト農家・アマチュア理論家）+ AI協働**
 
 **2025年11月**

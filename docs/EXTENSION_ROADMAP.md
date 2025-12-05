@@ -220,4 +220,4 @@ qualia = {
 ---
 
 **作成：2025年12月**
-**作成者：とまと（トマト農家）+ Claude（Anthropic）**
+**作成者：とまと（トマト農家）+ Claude（Anthropic）+Gemini（GoogleDeepMind）**

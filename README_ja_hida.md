@@ -141,6 +141,12 @@ python phase5_consciousness.py --compare
 
 ---
 
+## 💡 理解が難しい場合
+
+このリポジトリをAIアシスタント（Claude、ChatGPT、Gemini等）に読み込ませてください。
+`FOR_AI.md` が詳しく解説します。
+
+---
 ## 🚀 クイックスタート
 
 ### 必要なもの

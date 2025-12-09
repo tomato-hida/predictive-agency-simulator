@@ -141,6 +141,13 @@ Example: When you see a snake
 
 ---
 
+## 💡 Need Help Understanding?
+
+Feed this repository to an AI assistant (Claude, ChatGPT, Gemini, etc.).
+[spec_en.md](spec_en.md) will provide a detailed explanation.
+
+---
+
 ## 🚀 Quick Start
 
 ### Requirements

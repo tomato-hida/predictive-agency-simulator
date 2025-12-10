@@ -19,7 +19,6 @@
 
 A 5-layer network calculates prediction errors, and when the error exceeds a threshold, "consciousness mode" (full-layer coordination) activates. Several behaviors emerged that were not explicitly programmed.
 
-The name comes from Hida, Gifu Prefecture, Japan — the hometown of the creator.
 
 ```
 HIDA = Human-Inspired Dynamic Awareness Architecture

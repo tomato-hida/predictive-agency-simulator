@@ -1,13 +1,15 @@
 # HIDA Architecture
 ## Human-Inspired Dynamic Awareness Architecture
-### 5-Layer Consciousness Model — How Consciousness Emerges from Prediction Errors
+### Hida Architecture — Prediction-error driven state transition system
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 
-[日本語 README](README_ja_hida.md)
+[日本語 README](README_ja.md)
 
 📚 **[Documentation](docs/)** - For those who want to build Phase 6+, or AIs who want to understand the theory
+
+> ⚠️ **Terminology note**: In this project, "consciousness" is operationally defined as "full-layer coordination mode for responding to prediction errors." This is an engineering definition, not a philosophical claim.
 
 ---
 
@@ -83,7 +85,7 @@ What we wrote:
 What emerged:
 - Human-like behaviors that **appeared on their own**
 
-This is emergence. This is what makes it different from a Tamagotchi.
+This is emergence. This is what makes it different from a digital pet.
 
 ---
 
@@ -138,13 +140,6 @@ Example: When you see a snake
 2. Layer 2 qualia memory fires instantly ("Danger feeling") → Body jumps back
 3. Consciousness emerges (Layer 5 activates)
 4. Layer 4 memory lookup ("Snake → Poison → Danger") → "Stay away" decision
-
----
-
-## 💡 Need Help Understanding?
-
-Feed this repository to an AI assistant (Claude, ChatGPT, Gemini, etc.).
-[spec_en.md](spec_en.md) will provide a detailed explanation.
 
 ---
 

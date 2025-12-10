@@ -1,13 +1,15 @@
 # 飛騨アーキテクチャ (HIDA Architecture)
 ## Human-Inspired Dynamic Awareness Architecture
-### 5層意識モデル — 予測誤差から意識が生まれる仕組み
+### Hida Architecture — 予測誤差による状態遷移システム
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 
-[English README](README_hida.md)
+[English README](README.md)
 
 📚 **[ドキュメント](docs/)** - Phase 6以降を作りたい人、理論を理解したいAI向け
+
+> ⚠️ **用語について**: 本プロジェクトでは「意識」を「予測誤差に対応するための全層協調処理モード」として操作的に定義しています。哲学的議論ではなく、実装可能なシステムとして扱います。
 
 ---
 
@@ -83,7 +85,7 @@ python phase5_consciousness.py --compare
 出てきたもの：
 - 人間っぽい動作が **勝手に現れた**
 
-これが創発。たまごっちとの違い。
+これが創発。デジタルペットとの違い。
 
 ---
 
@@ -141,12 +143,6 @@ python phase5_consciousness.py --compare
 
 ---
 
-## 💡 理解が難しい場合
-
-このリポジトリをAIアシスタント（Claude、ChatGPT、Gemini等）に読み込ませてください。
-[spec.md](spec.md) が詳しく解説します。
-
----
 ## 🚀 クイックスタート
 
 ### 必要なもの

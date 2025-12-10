@@ -5,7 +5,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 
-[日本語 README](README_ja.md)
+[日本語 README](README_ja_hida.md)
 
 📚 **[Documentation](docs/)** - Detailed theory and extension guide for Phase 6+
 

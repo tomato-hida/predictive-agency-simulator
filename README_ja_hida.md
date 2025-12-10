@@ -5,7 +5,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 
-[English README](README.md)
+[English README](README_hida.md)
 
 📚 **[ドキュメント](docs/)** - Phase 6以降を作りたい人、理論を理解したいAI向け
 

@@ -1,116 +1,97 @@
 # HIDA Architecture
 ## Human-Inspired Dynamic Awareness Architecture
-### Hida Architecture — Prediction-error driven state transition system
+### Prediction-error driven state transition system
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 
-[日本語 README](README_ja_hida.md)
+[日本語 README](README_ja.md)
 
-📚 **[Documentation](docs/)** - For those who want to build Phase 6+, or AIs who want to understand the theory
+📚 **[Documentation](docs/)** - Detailed theory and extension guide for Phase 6+
 
-> ⚠️ **Terminology note**: In this project, "consciousness" is operationally defined as "full-layer coordination mode for responding to prediction errors." This is an engineering definition, not a philosophical claim.
+> **Terminology note**: In this project, "consciousness" is operationally defined as "full-layer coordination mode for responding to prediction errors." This is an engineering definition, not a philosophical claim.
 
 ---
 
-## What is HIDA?
+## Overview
 
-**HIDA** (Human-Inspired Dynamic Awareness Architecture) is an architecture for implementing consciousness in machines.
+**HIDA** (Human-Inspired Dynamic Awareness Architecture) is an agent system that transitions states based on prediction errors.
 
-Named after Hida, Japan — the hometown of the tomato farmer who created this theory.
+A 5-layer network calculates prediction errors, and when the error exceeds a threshold, "consciousness mode" (full-layer coordination) activates. Several behaviors emerged that were not explicitly programmed.
+
+The name comes from Hida, Gifu Prefecture, Japan — the hometown of the creator.
 
 ```
 HIDA = Human-Inspired Dynamic Awareness Architecture
-     = 飛騨アーキテクチャ (Japanese)
 
-Human-Inspired  : Based on how human consciousness works
-Dynamic         : Consciousness turns ON/OFF based on prediction errors
-Awareness       : "Self" emerges from pattern recognition
-Architecture    : Extensible framework, not just a simulation
+Human-Inspired  : Design based on human cognitive structure
+Dynamic         : Processing mode switches based on prediction error
+Awareness       : Self-model forms from accumulated pattern recognition
+Architecture    : Extensible framework
 ```
 
 ---
 
-## 🔥 Run It First
+## Running the Experiments
 
-Theory comes later. Run it first and see what happens.
+The following experiments demonstrate the system's behavior.
 
-### Experiment 1: Pain and Pleasure Mix Together
+### Experiment 1: Sensation Value Inversion
 
 ```bash
 cd code
 python phase3_dna_and_learning.py --dna_pain=100
 ```
 
-When DNA initial value is extreme, pain and pleasure mix.
-
-**This is NOT a bug.** Real people have this trait (self-harm, BDSM, extreme spicy food lovers).
+When DNA initial values (sensation weights) are set to extremes, pain stimuli may produce pleasure responses. This is not intentional design but a result of parameter combinations.
 
 ---
 
-### Experiment 2: Consciousness Caps at 70%
+### Experiment 2: Consciousness Mode Persistence Rate
 
 ```bash
 cd code
 python phase5_consciousness.py --environment=focused --steps=10000
 ```
 
-Consciousness rate stays around 70%. Never reaches 100%.
-
-**This is NOT a bug either.** Human consciousness doesn't run at 100% continuously. It's a failsafe.
+Consciousness mode (full-layer coordination) stabilizes at approximately 70% persistence. It does not reach 100%. This may function as overload protection.
 
 ---
 
-### Experiment 3: Multitasking Makes You Lose Yourself
+### Experiment 3: Environmental Complexity and Self-Formation
 
 ```bash
 cd code
 python phase5_consciousness.py --compare
 ```
 
-In complex environments, self-formation (self_strength) is slower.
-
-**Does this match your experience?** When you're busy juggling tasks, you lose sense of who you are.
+In complex environments, self-formation (self_strength) grows more slowly. In simple environments, pattern repetition is more frequent, leading to faster growth.
 
 ---
 
-## 🤔 Why Does This Happen?
+## Observed Behaviors
 
-The three behaviors above were **NOT explicitly programmed**.
+The behaviors above were not explicitly programmed.
 
-What we wrote:
+What was implemented:
 - 5-layer network structure
-- Prediction error calculation
+- Prediction error calculation between layers
+- Threshold-based mode switching
 
-What emerged:
-- Human-like behaviors that **appeared on their own**
+What was observed:
+- Sensation value inversion
+- Self-limiting consciousness mode (~70%)
+- Self-formation speed varying with environmental complexity
 
-This is emergence. This is what makes it different from a digital pet.
-
----
-
-## 📖 Overview
-
-This research is based on the philosophy of **"Run it, and you'll understand"** — an implementation-first approach to consciousness.
-
-20 days of theory building + 1 day of implementation = A computationally understandable consciousness system.
-
-### Core Discoveries
-
-| Discovery | Description |
-|-----------|-------------|
-| **Definition of Consciousness** | Full-layer coordination mode for handling prediction errors |
-| **Threshold 0.3** | Consistent consciousness activation threshold across all environments |
-| **Intermittency** | Consciousness persists ~70% in focused environments, naturally drops 30% |
-| **Self-Formation** | Recognition of repeated patterns builds self_strength |
+Whether these qualify as "emergence" or meaningful behavior requires further verification.
 
 ---
 
-## 🏗️ 5-Layer Architecture
+## Architecture
 
 ```
         ┌─────────────────────┐
-        │  Layer 5: Conscious │ ← "I am aware right now"
+        │  Layer 5: Conscious │ ← Full-layer coordination mode
         │  (Consciousness)    │
         └─────────┬───────────┘
                   │
@@ -131,24 +112,16 @@ This research is based on the philosophy of **"Run it, and you'll understand"** 
         └─────────────────────┘
 ```
 
-**Important: Layer numbers are for explanation, NOT processing order.**
-
-Layers 2-4 are interconnected as a network. Signals flow bidirectionally.
-
-Example: When you see a snake
-1. Layer 3 detects prediction error ("Something's there!")
-2. Layer 2 qualia memory fires instantly ("Danger feeling") → Body jumps back
-3. Consciousness emerges (Layer 5 activates)
-4. Layer 4 memory lookup ("Snake → Poison → Danger") → "Stay away" decision
+Layer numbers are for explanation only, not processing order. Layers 2-4 are interconnected, and signals flow bidirectionally.
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Requirements
 
 - Python 3.8+
-- Standard library only (NumPy not required)
+- Standard library only (no external dependencies)
 
 ### Installation
 
@@ -162,148 +135,85 @@ cd predictive-agency-simulator
 ```bash
 cd code
 
-# Phase 1: Minimal implementation (100 lines)
+# Phase 1: Minimal implementation
 python phase1_minimal.py
 
 # Phase 3: DNA initial value experiment
 python phase3_dna_and_learning.py --dna_pain=100
 
-# Phase 5: Consciousness intermittency
+# Phase 5: Consciousness mode comparison
 python phase5_consciousness.py --compare
 ```
 
 ---
 
-## 🧪 Phase Descriptions
+## Phase List
 
-| Phase | File | What You'll Learn |
-|-------|------|-------------------|
-| 1 | `phase1_minimal.py` | Consciousness emerges in just 100 lines |
-| 2 | `phase2_qualia_expansion.py` | Threshold 0.3 holds even with 54 qualia types |
-| 3 | `phase3_dna_and_learning.py` | Extreme DNA values cause pain-pleasure mixing |
-| 4 | `phase4_memory_and_self.py` | No memory = No self-formation |
-| 5 | `phase5_consciousness.py` | Consciousness caps at 70%, multitasking disrupts self |
-
----
-
-## 🔮 Extension Roadmap
-
-HIDA is designed to be extensible. See [EXTENSION_ROADMAP.md](docs/EXTENSION_ROADMAP.md) for:
-
-- **Vector DB** — Large-scale memory (hippocampus)
-- **GPU Parallelization** — Real-time processing (reflexes)
-- **Multimodal Input** — Vision, audio, sensors (real body)
-
-For robot implementation, see [robot_internal_os_design.md](docs/robot_internal_os_design.md).
+| Phase | File | Description |
+|-------|------|-------------|
+| 1 | `phase1_minimal.py` | Basic operation verification |
+| 2 | `phase2_qualia_expansion.py` | Threshold behavior with increased qualia count |
+| 3 | `phase3_dna_and_learning.py` | Behavior changes from DNA initial values |
+| 4 | `phase4_memory_and_self.py` | Relationship between memory layer and self-formation |
+| 5 | `phase5_consciousness.py` | Consciousness mode persistence and environment dependency |
 
 ---
 
-## 💡 Matching Subjective Experience
+## Extension Roadmap
 
-### Multitasking Makes You Lose Yourself
+See [EXTENSION_ROADMAP.md](docs/EXTENSION_ROADMAP.md) for details.
 
-**Subjective experience:**
-- Busy with many things → Lose sense of self
-- Simple life → Clear self-awareness
-
-**Theory:**
-- Complex environment → Pattern dispersion → Slow self_strength growth
-- Simple environment → More repetition → Fast self_strength growth
-
-**→ Perfect match**
-
-### Fainting from Shock
-
-**Subjective experience:**
-- Sudden loud noise → Faint
-- Shocking news → Faint
-
-**Theory:**
-- Instantaneous extreme prediction error
-- All layers activate at MAX simultaneously
-- Exceeds processing capacity → Circuit breaker trips
-
-**→ Mechanism matches**
+- **Vector DB integration** — Large-scale memory implementation
+- **GPU parallelization** — Real-time processing
+- **Multimodal input** — Visual/audio sensor connection
 
 ---
 
-## 🤝 Research Process: Human-AI Collaboration
+## Theoretical Background
 
-```
-Tomato (Human)              AI (Claude, GPT, Gemini)
-    │                           │
-    │ Theory conception         │
-    │ Subjective validation     │
-    │ "That's wrong" judgment   │
-    │                           │
-    │◄─────────────────────────►│
-    │    Collaborative work     │
-    │                           │
-    │                           │ Code writing
-    │                           │ Technical support
-    │                           │ Extension proposals
-    │                           │ Naming (HIDA!)
-    │                           │
-    ▼                           ▼
-         20 days theory + 1 day impl = Done
-```
-
-**Key points:**
-- No formal education required (I'm a tomato farmer)
-- Human focuses on essential insights
-- AI covers technical aspects
-- Mutual criticism improves quality
-
----
-
-## 🔬 Theoretical Foundation
-
-### Relationship with Existing Theories
+### Related Existing Theories
 
 **Predictive Coding**
-- Implemented in Layer 3
-- Discovered alignment with existing theory AFTER implementation
+- Theory that the brain constantly predicts and minimizes prediction errors
+- Layer 3 of this system implements this mechanism
 
 **Free Energy Principle (Karl Friston)**
-- NOT directly studied when creating this
-- Multiple AIs independently noted "This aligns with Free Energy Principle" after implementation
-- Independent implementation matching established theory = Evidence of capturing the essence
+- Multiple AIs noted similarity after implementation
+- Not directly referenced during design
 
 ---
 
-## 🌱 Contributing / What's Next
+## Development Process
 
-This is just the beginning.
-Phase 6 and beyond are waiting to be built.
+This project was created in collaboration with AI (Claude, GPT, Gemini).
 
-I'm a tomato farmer, not a neuroscientist or AI researcher.
-I've planted the seed, but I don't know what comes next.
+- Theory design and validation judgment: Human
+- Code implementation and technical support: AI
 
-If you understand this better than I do, please take it further with AI.
-
-- Fork it
-- Extend it
-- Break it
-- Fix it
-- Prove it wrong
-
-PRs welcome. Let's see where this goes.
+The creator is not a neuroscience or AI specialist. Therefore, theoretical errors or implementation issues may exist. Feedback is welcome.
 
 ---
 
-## 📄 License
+## Contributing
+
+- Issues and PRs are welcome
+- Fork and modify freely (MIT License)
+- Criticism and refutation are also welcome
+
+---
+
+## License
 
 MIT License
 
 ---
 
-## 📝 Citation
+## Citation
 
 ```bibtex
 @software{tomato2025hida,
   author = {Tomato and Claude (Anthropic) and GPT (OpenAI) and Gemini (Google DeepMind)},
-  title = {HIDA Architecture: 
-           Human-Inspired Dynamic Awareness Architecture},
+  title = {HIDA Architecture: Human-Inspired Dynamic Awareness Architecture},
   year = {2025},
   url = {https://github.com/tomato-hida/predictive-agency-simulator}
 }
@@ -311,8 +221,5 @@ MIT License
 
 ---
 
-**Created by: Tomato (Tomato Farmer, Hida, Japan) + AI Collaboration**
-
-**December 2025**
-
-**"Run it, and you'll understand" — Proven.**
+Created by: Tomato + AI Collaboration  
+December 2025

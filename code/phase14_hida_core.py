@@ -119,14 +119,19 @@ class Memory:
             return 0.5
         return stats["found"] / total
     
-    def learn_preference(self, keyword: str, actual_object: str):
-        """好み/対応を学習"""
-        self.preferences[keyword] = actual_object
-        print(f"  [学習] 「{keyword}」 → 「{actual_object}」 を覚えました")
+    # learn_preference は削除（preferences の構造 verbs/responses/custom_actions と衝突するため）
+    # 学習は _handle_answer 内で直接 verbs/responses/custom_actions に書き込む
     
     def get_preference(self, keyword: str) -> Optional[str]:
-        """学習した好みを取得"""
-        return self.preferences.get(keyword)
+        """学習した好みを取得（後方互換用）"""
+        # verbs, responses, custom_actions を検索
+        if keyword in self.preferences.get("verbs", {}):
+            return self.preferences["verbs"][keyword]
+        if keyword in self.preferences.get("responses", {}):
+            return self.preferences["responses"][keyword]
+        if keyword in self.preferences.get("custom_actions", {}):
+            return self.preferences["custom_actions"][keyword]
+        return None
 
 
 class HidaCore:
@@ -241,6 +246,8 @@ class HidaCore:
             if self.name in self.qualia.auditory:
                 self.prediction_error += 0.5  # 誤差増大
                 self.attention_target = "caller"
+            # 聴覚入力は1回で消費（次サイクルでの誤差二重加算を防ぐ）
+            self.qualia.auditory = ""
     
     def _layer3_structure(self):
         """L3: 構造化層 - 予測と誤差"""

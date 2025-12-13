@@ -693,6 +693,7 @@ class HidaCore:
         # 質問の回答待ちの場合
         if self.waiting_for_answer and self.pending_question:
             self._handle_answer(text)
+            self.qualia.auditory = ""  # 入力消費（L2で二重処理しない）
             return
         
         # 名前が含まれてるか
@@ -703,6 +704,9 @@ class HidaCore:
             
             # コマンド解析
             self._parse_command(text)
+        
+        # 入力消費（L2で二重処理しない）
+        self.qualia.auditory = ""
     
     def _handle_answer(self, text: str):
         """質問への回答を処理"""
@@ -1088,15 +1092,22 @@ class HidaCore:
             elif primitive == "fetch":
                 target = step.get("target")
                 if target == "$item":
-                    target = self._current_item
-                self._start_action(target, "search")
+                    if hasattr(self, '_current_item') and self._current_item:
+                        target = self._current_item
+                    else:
+                        print(f"  → [エラー] $item が未定義です")
+                        continue
+                self._start_action(target, "fetch")
             
             elif primitive == "move_to":
                 target = step.get("target")
                 if target == "$item.original_pos":
-                    pos = self.memory.get_original_position(self._current_item)
-                    if pos and self.sim:
-                        self.sim.move_toward(pos)
+                    if hasattr(self, '_current_item') and self._current_item:
+                        pos = self.memory.get_original_position(self._current_item)
+                        if pos and self.sim:
+                            self.sim.move_toward(pos)
+                    else:
+                        print(f"  → [エラー] $item が未定義です")
             
             elif primitive == "put_down":
                 if self.sim:
@@ -1119,7 +1130,7 @@ class HidaCore:
                     for do_step in do_steps:
                         prim = do_step.get("primitive")
                         if prim == "fetch":
-                            self.action_queue.append({"type": "search", "target": item})
+                            self.action_queue.append({"type": "fetch", "target": item})
                         elif prim == "move_to":
                             pos = self.memory.get_original_position(item)
                             if pos:

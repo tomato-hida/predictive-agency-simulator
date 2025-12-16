@@ -151,7 +151,7 @@ hida_self_awareness/
 ## 理論的背景
 
 「人間内面運動理論（5層モデル）」に基づく実装。詳細は：
-- [consciousness-theory-implementation](https://github.com/your-username/consciousness-theory-implementation)
+https://github.com/tomato-hida/predictive-agency-simulator
 
 ## ライセンス
 

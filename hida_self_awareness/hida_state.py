@@ -28,7 +28,9 @@ class HidaState:
         self.L3_prediction = {
             'expected_next': None,      # 次に起こると予測していること
             'prediction_error': 0.0,    # 予測誤差
-            'pattern_confidence': 0.5   # パターン認識の確信度
+            'pattern_confidence': 0.5,  # パターン認識の確信度
+            'current_prediction': None, # 今の予測（文字列）
+            'prediction_detail': {}     # 予測の詳細（検証用）
         }
         
         # L4: 記憶層
@@ -73,25 +75,104 @@ class HidaState:
         if success:
             self.L2_qualia['satisfaction'] = min(1.0, self.L2_qualia['satisfaction'] + 0.1)
             self.L2_qualia['frustration'] = max(0.0, self.L2_qualia['frustration'] - 0.1)
+            self.L2_qualia['comfort'] = min(1.0, self.L2_qualia['comfort'] + 0.05)
         else:
             self.L2_qualia['frustration'] = min(1.0, self.L2_qualia['frustration'] + 0.2)
             self.L2_qualia['satisfaction'] = max(0.0, self.L2_qualia['satisfaction'] - 0.05)
+            self.L2_qualia['comfort'] = max(0.0, self.L2_qualia['comfort'] - 0.1)
         
-        # L3: 予測誤差の計算（実際の結果で更新）
-        if not success:
-            # 失敗 = 予測誤差大
-            self.L3_prediction['prediction_error'] = min(1.0, 
-                self.L3_prediction['prediction_error'] + 0.3)
-        else:
-            # 成功 = 予測誤差減少
-            self.L3_prediction['prediction_error'] = max(0.0,
-                self.L3_prediction['prediction_error'] - 0.1)
+        # 同じ行動の繰り返し → comfort低下（退屈）
+        recent = list(self.L4_memory['recent_actions'])
+        if len(recent) >= 3 and len(set(recent[-3:])) == 1:
+            self.L2_qualia['comfort'] = max(0.0, self.L2_qualia['comfort'] - 0.1)
+            self.L2_qualia['curiosity'] = min(1.0, self.L2_qualia['curiosity'] + 0.1)
+        
+        # L3: 予測誤差の計算（予測と実際の比較）
+        prediction_error = self._verify_prediction(action, success, message)
+        self.L3_prediction['prediction_error'] = prediction_error
         
         # L4: 自己強度の更新（行動の一貫性）
         self._update_self_strength()
         
         # L5: 同期スコアの計算
         self._update_sync_score()
+    
+    def set_prediction(self, prediction_text, detail=None):
+        """
+        予測を設定（行動前に呼ぶ）
+        
+        prediction_text: 予測の文字列（表示用）
+        detail: 予測の詳細（検証用）
+            {
+                'expected_distance': int,   # 期待する距離
+                'expected_direction': str,  # 期待する方向
+                'expected_holding': str,    # 期待する持ち物
+                'expected_goal': bool       # 目標達成期待
+            }
+        """
+        self.L3_prediction['current_prediction'] = prediction_text
+        self.L3_prediction['prediction_detail'] = detail or {}
+    
+    def _verify_prediction(self, action, success, message):
+        """
+        予測と実際を比較して誤差を計算
+        
+        Returns: prediction_error (0.0 - 1.0)
+        """
+        detail = self.L3_prediction.get('prediction_detail', {})
+        current_error = self.L3_prediction['prediction_error']
+        
+        # 予測がない場合は従来の方式
+        if not detail:
+            if not success:
+                return min(1.0, current_error + 0.3)
+            else:
+                return max(0.0, current_error - 0.1)
+        
+        errors = []
+        
+        # 距離予測の検証
+        if 'expected_distance' in detail:
+            # 行動成功なら距離は減ったはず
+            if success and action == 'move_forward':
+                errors.append(0.0)  # 予測通り
+            elif not success:
+                errors.append(0.5)  # 予測外れ
+        
+        # 方向予測の検証
+        if 'expected_direction' in detail:
+            actual_dir = self.L1_body['direction']
+            expected_dir = detail['expected_direction']
+            if actual_dir == expected_dir:
+                errors.append(0.0)  # 予測通り
+            else:
+                errors.append(0.8)  # 方向が違う
+        
+        # 持ち物予測の検証
+        if 'expected_holding' in detail:
+            actual_holding = self.L1_body['holding']
+            expected_holding = detail['expected_holding']
+            if actual_holding == expected_holding:
+                errors.append(0.0)  # 予測通り
+            else:
+                errors.append(1.0)  # 持ち物が違う
+        
+        # 目標達成予測の検証
+        if 'expected_goal' in detail:
+            if detail['expected_goal'] and 'goal' in message.lower():
+                errors.append(0.0)  # 予測通り達成
+            elif not detail['expected_goal']:
+                errors.append(0.0)  # 予測通り未達成
+            else:
+                errors.append(0.5)
+        
+        # 誤差の平均（詳細がない場合は成功/失敗で判断）
+        if errors:
+            return sum(errors) / len(errors)
+        elif success:
+            return max(0.0, current_error - 0.1)
+        else:
+            return min(1.0, current_error + 0.3)
         
     def _update_self_strength(self):
         """自己強度の更新 - 行動の成功に基づく"""

@@ -153,13 +153,6 @@ hida_self_awareness/
 「人間内面運動理論（5層モデル）」に基づく実装。詳細は：
 - [consciousness-theory-implementation](https://github.com/your-username/consciousness-theory-implementation)
 
-
-## 困ったら
-
-このフォルダのファイル一式をAI（Claude、GPT、Gemini等）に投げて「動かしたい」と聞いてください。
-
-
 ## ライセンス
 
 MIT License
-

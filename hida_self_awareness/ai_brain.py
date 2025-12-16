@@ -68,8 +68,8 @@ class AIBrain:
         1. 飛騨のルールで行動を決定
         2. LLMで説明を生成（オプション）
         """
-        # Step 1: 飛騨のルールで行動決定
-        action, rule_reason = self._decide_by_rule(state_json, world)
+        # Step 1: 飛騨のルールで行動決定（予測付き）
+        action, rule_reason, prediction, prediction_detail = self._decide_by_rule(state_json, world)
         
         # Step 2: LLMで説明生成（use_ollama が True の場合のみ）
         if self.use_ollama or self.use_api:
@@ -83,6 +83,8 @@ class AIBrain:
         return {
             "action": action,
             "rule_reason": rule_reason,  # 飛騨のルールによる理由
+            "prediction": prediction,     # 予測（この行動でどうなるはず）
+            "prediction_detail": prediction_detail,  # 予測の詳細（検証用）
             "reasoning": explanation.get("reasoning", rule_reason),  # LLMの説明
             "self_awareness": explanation.get("self_awareness", "")
         }
@@ -98,6 +100,12 @@ class AIBrain:
         3. 目標物を持っていてゴールが近い → ゴール方向へ
         4. 目標物が見える → 目標物方向へ
         5. 目標物が見えない → 探索 or 目標達成
+        
+        Returns: (action, reason, prediction, prediction_detail)
+            action: 実行する行動
+            reason: なぜその行動か（目的から）
+            prediction: どうなるはず（予測文字列）
+            prediction_detail: 予測の詳細（検証用dict）
         """
         body = state_json.get('L1_body', {})
         consciousness = state_json.get('L5_consciousness', {})
@@ -110,14 +118,40 @@ class AIBrain:
         front_cell = world.get_front_cell()
         legal_actions = world.get_legal_actions()
         is_conscious = consciousness.get('is_conscious', False)
-        curiosity = qualia.get('curiosity', 0)
         
-        # ========== 穴③修正: 意識ON時に微小探索ノイズ ==========
-        if is_conscious and curiosity > 0.5:
-            if random.random() < 0.1:  # 10%の確率で探索
-                explore_actions = [a for a in legal_actions if a != 'wait']
+        # クオリア取得
+        curiosity = qualia.get('curiosity', 0.5)
+        frustration = qualia.get('frustration', 0.0)
+        comfort = qualia.get('comfort', 0.5)
+        satisfaction = qualia.get('satisfaction', 0.0)
+        
+        # ========== 原動力チェック: 目的がないと動かない ==========
+        if not goal:
+            return 'wait', "目的がない。動く理由がない", "変化なし", {}
+        
+        # ========== クオリアの影響 ==========
+        
+        # frustration高 → 別のアプローチ試す（ランダム行動）
+        if frustration > 0.5 and is_conscious:
+            if random.random() < frustration * 0.3:  # 最大30%の確率
+                explore_actions = [a for a in legal_actions if a not in ['wait', 'grab', 'release']]
                 if explore_actions:
-                    return random.choice(explore_actions), "好奇心による探索行動"
+                    action = random.choice(explore_actions)
+                    return action, "フラストレーションから別のアプローチを試す", "状況が変わるかも", {}
+        
+        # comfort低 → より積極的に動く（waitを避ける）
+        avoid_wait = comfort < 0.3
+        
+        # curiosity高 → 探索ノイズ
+        # ただし、目的達成中（何か持ってる or 目標に向かってる）は抑制
+        goal_in_progress = holding is not None  # 何か持ってる = 目的達成中
+        
+        if is_conscious and curiosity > 0.5 and not goal_in_progress:
+            if random.random() < 0.1:  # 10%の確率で探索
+                explore_actions = [a for a in legal_actions if a not in ['wait', 'grab', 'release']]
+                if explore_actions:
+                    action = random.choice(explore_actions)
+                    return action, "好奇心による探索行動", "何か発見するかも", {}
         
         # 目標物を特定
         target_obj = None
@@ -129,39 +163,43 @@ class AIBrain:
         # ========== 優先度1: 目標物を掴む ==========
         if target_obj and not holding:
             if front_cell == target_obj and 'grab' in legal_actions:
-                return 'grab', f"目標の{target_obj}が正面にあるので掴む"
+                prediction_detail = {'expected_holding': target_obj}
+                return 'grab', f"目標の{target_obj}が正面にあるので掴む", f"{target_obj}を持っている状態になる", prediction_detail
         
         # ========== 優先度2: ゴールで置く ==========
         if holding and ('goal' in goal.lower() or '届け' in goal):
             if front_cell == 'goal' and 'release' in legal_actions:
-                return 'release', f"ゴールに到着したので{holding}を置く"
+                prediction_detail = {'expected_holding': None, 'expected_goal': True}
+                return 'release', f"ゴールに到着したので{holding}を置く", "目標達成", prediction_detail
         
         # ========== 優先度3: ゴールに向かう（持っている場合） ==========
         if holding and ('goal' in goal.lower() or '届け' in goal):
             goal_pos = world.find_object('goal')
             if goal_pos:
-                action, reason = self._move_toward(position, direction, goal_pos, legal_actions, 'goal')
+                action, reason, prediction, prediction_detail = self._move_toward(position, direction, goal_pos, legal_actions, 'goal')
                 if action:
-                    return action, reason
+                    return action, reason, prediction, prediction_detail
         
         # ========== 優先度4: 目標物に向かう ==========
         if target_obj and not holding:
             target_pos = world.find_object(target_obj)
             if target_pos:
-                action, reason = self._move_toward(position, direction, target_pos, legal_actions, target_obj)
+                action, reason, prediction, prediction_detail = self._move_toward(position, direction, target_pos, legal_actions, target_obj)
                 if action:
-                    return action, reason
+                    return action, reason, prediction, prediction_detail
             else:
                 # 目標物が見つからない = 既にgoalに届けた可能性
-                return 'wait', "目標達成！ red_ballをgoalに届けました"
+                return 'wait', "目標達成！ red_ballをgoalに届けました", "変化なし", {}
         
         # ========== 優先度5: 探索 ==========
-        return self._explore(legal_actions)
+        action, reason = self._explore(legal_actions, avoid_wait)
+        return action, reason, "新しい情報が得られるかも", {}
     
     def _move_toward(self, pos, direction, target_pos, legal_actions, target_name):
-        """目標に向かう行動を決定"""
+        """目標に向かう行動を決定（予測付き）"""
         dx = target_pos[0] - pos[0]
         dy = target_pos[1] - pos[1]
+        distance = abs(dx) + abs(dy)
         
         # 目標方向を決定
         target_dir = None
@@ -173,7 +211,10 @@ class AIBrain:
         # 既に目標方向を向いている
         if direction == target_dir:
             if 'move_forward' in legal_actions:
-                return 'move_forward', f"{target_name}に向かって前進"
+                new_distance = distance - 1
+                prediction = f"{target_name}まで残り{new_distance}マス"
+                prediction_detail = {'expected_distance': new_distance}
+                return 'move_forward', f"{target_name}に向かって前進", prediction, prediction_detail
             else:
                 # 前が塞がっている → 迂回
                 return self._detour(direction, legal_actions, target_name)
@@ -181,9 +222,11 @@ class AIBrain:
         # 目標方向を向く
         turn = self._get_turn_direction(direction, target_dir)
         if turn in legal_actions:
-            return turn, f"{target_name}の方向（{target_dir}）を向く"
+            prediction = f"{target_dir}方向を向く"
+            prediction_detail = {'expected_direction': target_dir}
+            return turn, f"{target_name}の方向（{target_dir}）を向く", prediction, prediction_detail
         
-        return None, ""
+        return None, "", "", {}
     
     def _get_turn_direction(self, current, target):
         """目標方向に向くための回転を決定"""
@@ -202,14 +245,14 @@ class AIBrain:
         return 'wait'
     
     def _detour(self, direction, legal_actions, target_name):
-        """迂回行動"""
+        """迂回行動（予測付き）"""
         if 'turn_right' in legal_actions:
-            return 'turn_right', f"前が塞がっているので迂回（{target_name}へ）"
+            return 'turn_right', f"前が塞がっているので迂回（{target_name}へ）", "別のルートが見つかるかも", {}
         if 'turn_left' in legal_actions:
-            return 'turn_left', f"前が塞がっているので迂回（{target_name}へ）"
-        return 'wait', "動けない"
+            return 'turn_left', f"前が塞がっているので迂回（{target_name}へ）", "別のルートが見つかるかも", {}
+        return 'wait', "動けない", "変化なし", {}
     
-    def _explore(self, legal_actions):
+    def _explore(self, legal_actions, avoid_wait=False):
         """探索行動"""
         if 'move_forward' in legal_actions:
             return 'move_forward', "探索のため前進"
@@ -217,6 +260,13 @@ class AIBrain:
             return 'turn_right', "探索のため方向転換"
         if 'turn_left' in legal_actions:
             return 'turn_left', "探索のため方向転換"
+        
+        # comfort低い時はwaitでも何かする
+        if avoid_wait:
+            any_action = [a for a in legal_actions if a != 'wait']
+            if any_action:
+                return any_action[0], "不快なので何か行動したい"
+        
         return 'wait', "動けない"
     
     def _generate_self_awareness(self, state_json):

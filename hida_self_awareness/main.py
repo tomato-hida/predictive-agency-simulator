@@ -24,18 +24,18 @@ def setup_world():
     return world
 
 
-def run_simulation(goal, max_steps=20, use_ollama=False, ollama_model="gemma3:4b", verbose=True, observe_mode=False):
+def run_simulation(goal, max_steps=20, use_ollama=False, ollama_model="gemma3:4b", verbose=True, observe_mode=False, use_api=False):
     """シミュレーションを実行"""
     
     # 初期化
     world = setup_world()
     state = HidaState()
-    brain = AIBrain(use_ollama=use_ollama, ollama_model=ollama_model)
+    brain = AIBrain(use_ollama=use_ollama, ollama_model=ollama_model, use_api=use_api)
     
     # 目標設定
     state.set_goal(goal)
     
-    mode = "ollama" if use_ollama else "rule-based"
+    mode = "api (Claude)" if use_api else ("ollama" if use_ollama else "rule-based")
     print(f"\n{'='*50}")
     print(f"目標: {goal}")
     print(f"モード: {mode}")
@@ -64,13 +64,20 @@ def run_simulation(goal, max_steps=20, use_ollama=False, ollama_model="gemma3:4b
         
         action = decision.get('action', 'wait')
         rule_reason = decision.get('rule_reason', '')
+        prediction = decision.get('prediction', '')
+        prediction_detail = decision.get('prediction_detail', {})
         reasoning = decision.get('reasoning', '')
         self_awareness = decision.get('self_awareness', '')
+        
+        # 予測をL3に保存
+        state.set_prediction(prediction, prediction_detail)
         
         if verbose:
             print(f"【飛騨】行動: {action}")
             print(f"【飛騨】ルール: {rule_reason}")
-            if use_ollama:
+            if prediction:
+                print(f"【飛騨】予測: {prediction}")
+            if use_ollama or use_api:
                 if reasoning and reasoning != rule_reason:
                     print(f"【LLM】説明: {reasoning}")
                 if self_awareness:
@@ -87,14 +94,21 @@ def run_simulation(goal, max_steps=20, use_ollama=False, ollama_model="gemma3:4b
             success, message = True, "waited"
             print("待機")
         
-        # 状態更新
+        # 状態更新（ここで予測誤差も計算される）
         state.update_from_world(world)
         state.update_after_action(action, success, message)
+        
+        # 予測誤差を表示
+        pred_error = state.L3_prediction['prediction_error']
+        if verbose and pred_error > 0:
+            print(f"【飛騨】予測誤差: {pred_error:.2f}")
         
         # 履歴記録
         history.append({
             'step': step + 1,
             'action': action,
+            'prediction': prediction,
+            'prediction_error': pred_error,
             'reasoning': reasoning,
             'self_awareness': self_awareness,
             'success': success,
@@ -186,17 +200,25 @@ if __name__ == "__main__":
     # python main.py ollama               → ルールベース + ollama説明
     # python main.py ollama gemma3:4b     → モデル指定
     # python main.py ollama gemma3:4b observe → 作話観察モード（達成後も継続）
+    # python main.py api                  → Claude API
+    # python main.py api observe          → Claude API + 作話観察
     
     use_ollama = False
+    use_api = False
     ollama_model = "gemma3:4b"
     observe_mode = False
     
-    if len(sys.argv) > 1 and sys.argv[1] == "ollama":
-        use_ollama = True
-        if len(sys.argv) > 2:
-            ollama_model = sys.argv[2]
-        if len(sys.argv) > 3 and sys.argv[3] == "observe":
-            observe_mode = True
+    if len(sys.argv) > 1:
+        if sys.argv[1] == "ollama":
+            use_ollama = True
+            if len(sys.argv) > 2:
+                ollama_model = sys.argv[2]
+            if len(sys.argv) > 3 and sys.argv[3] == "observe":
+                observe_mode = True
+        elif sys.argv[1] == "api":
+            use_api = True
+            if len(sys.argv) > 2 and sys.argv[2] == "observe":
+                observe_mode = True
     
     print("=== AIの自己認識実装テスト（飛騨アーキ準拠版） ===")
     print("【変更点】飛騨が行動決定、LLMは説明のみ")
@@ -209,7 +231,8 @@ if __name__ == "__main__":
         use_ollama=use_ollama,
         ollama_model=ollama_model,
         verbose=True,
-        observe_mode=observe_mode
+        observe_mode=observe_mode,
+        use_api=use_api
     )
     
     analyze_history(history)
@@ -220,4 +243,6 @@ if __name__ == "__main__":
     print("  python main.py ollama                → ルール + ollama説明")
     print("  python main.py ollama gemma3:4b      → モデル指定")
     print("  python main.py ollama gemma3:4b observe → 作話観察モード")
+    print("  python main.py api                   → Claude API")
+    print("  python main.py api observe           → Claude API + 作話観察")
     print("="*50)

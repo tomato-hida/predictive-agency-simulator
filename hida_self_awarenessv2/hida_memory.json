@@ -1,0 +1,10 @@
+{
+  "self_pattern": {
+    "comfort_threshold": 0.22500000000000053,
+    "curiosity_tendency": 0.8079999999999999,
+    "frustration_tolerance": 0.35000000000000003,
+    "exploration_rate": 1.0,
+    "wall_collision_rate": 0.6153846153846154
+  },
+  "total_episodes": 213
+}

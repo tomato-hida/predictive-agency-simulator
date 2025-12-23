@@ -250,4 +250,4 @@ if safe_preference > 0.0:
 
 ## 関連
 
-- [人間の内面運動理論](https://github.com/tomato-and-mozzarella/human-inner-movement-theory)
+- [人間の内面運動理論](https://github.com/tomato-hida/predictive-agency-simulator)
